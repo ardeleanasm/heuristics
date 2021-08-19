@@ -11,6 +11,6 @@ int main(int argc,char **argv)
     ga::Chromosome<double,5> c2(s2);
     c1 = c2;
     spdlog::info(c1.GetGenes());
-    spdlog::info(ga::MAX_VALUE<8>::value);
+    spdlog::info(ga::CALCULATE_MAX_VALUE<8>::value);
     return 0;
 }
