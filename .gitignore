@@ -1,0 +1,12 @@
+bin/*
+CMakeFiles/*
+src/CMakeFiles/*
+src/*.cmake
+src/Makefile
+Makefile
+*.cmake
+CMakeCache.txt
+conan*
+*.json
+tags
+
