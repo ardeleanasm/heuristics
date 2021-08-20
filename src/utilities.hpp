@@ -38,20 +38,24 @@ public:
   }
 };
 
-std::string Uint64ToString(const std::uint64_t value)
+template <typename T>
+std::string UintToString(const std::uint64_t value)
 {
-    std::bitset<sizeof(std::uint64_t)*8> bits(value);
+    static_assert(std::is_integral<T>::value, "Type can only be uint64_t, uint32_t, uint16_t and uint8_t");
+    std::bitset<sizeof(T)*8> bits(value);
     return bits.to_string();
 }
 
-std::uint64_t StringToUint64(const std::string& s)
+template <typename T>
+std::uint64_t StringToUint(const std::string& s)
 {
-    std::uint64_t value = 0;
-    std::uint64_t x = 0;
+    static_assert(std::is_integral<T>::value, "Type can only be uint64_t, uint32_t, uint16_t and uint8_t");
+    T value = 0;
+    T x = 0;
     std::for_each(s.begin(),s.end(),[&x](const char &c) {
 	    x = (x<<1)+(c-'0');
 	    });
-    std::memcpy(&value,&x,sizeof(uint64_t));
+    std::memcpy(&value,&x,sizeof(T));
     return value;
 }
 
