@@ -15,13 +15,17 @@ public:
 
   Chromosome &operator=(Chromosome<T, geneLength> &&) = delete;
 
+  void SetGenes(const std::string &gene) {
+      assert(gene.length()==geneLength);
+      sGenes = gene;
+  }
+
   [[nodiscard]] std::string GetGenes() const { return sGenes; }
 
   [[nodiscard]] T GetFitnessValue() const { return gFitnessValue; }
 
   void SetFitnessValue(const T value);
 
-  void Initialize();
 private:
   T gFitnessValue;
   std::string sGenes;
@@ -50,12 +54,12 @@ template <typename T, std::size_t geneLength>
 void Chromosome<T, geneLength>::SetFitnessValue(const T value) {
   gFitnessValue = value;
 }
-
+/*
 template <typename T, std::size_t geneLength>
 void Chromosome<T,geneLength>::Initialize() {
     ga::Randomize<geneLength> rndGenerator;
     std::uint8_t rndGene = rndGenerator.generate();
     sGenes = ga::UintToString<std::uint8_t>(rndGene);
 }
-
+*/
 } // namespace ga

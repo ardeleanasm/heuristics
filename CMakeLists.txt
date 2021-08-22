@@ -42,6 +42,7 @@ if(ENABLE_PCH)
     <source_location>
     <bitset>
     <cstdint>
+    <functional>
     )
 endif()
 
