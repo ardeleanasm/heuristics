@@ -2,8 +2,7 @@
 
 namespace ga {
 template <unsigned int N> struct CALCULATE_MAX_VALUE {
-  static constexpr std::uint64_t value =
-      2 * CALCULATE_MAX_VALUE<N - 1>::value;
+  static constexpr std::uint64_t value = 2 * CALCULATE_MAX_VALUE<N - 1>::value;
 };
 
 template <> struct CALCULATE_MAX_VALUE<0> {
@@ -29,7 +28,8 @@ template <unsigned int N> class Randomize {
                 "Template parameter N must be in interval [1,64].");
 
 public:
-  static constexpr std::uint64_t MAX_VALUE = ga::CALCULATE_MAX_VALUE<N>::value - 1;
+  static constexpr std::uint64_t MAX_VALUE =
+      ga::CALCULATE_MAX_VALUE<N>::value - 1;
 
   static std::uint64_t generate() {
     static std::uniform_int_distribution<std::uint64_t> uniformDistribution(
@@ -38,25 +38,22 @@ public:
   }
 };
 
-template <typename T>
-std::string UintToString(const std::uint64_t value)
-{
-    static_assert(std::is_integral<T>::value, "Type can only be uint64_t, uint32_t, uint16_t and uint8_t");
-    std::bitset<sizeof(T)*8> bits(value);
-    return bits.to_string();
+template <typename T> std::string UintToString(const std::uint64_t value) {
+  static_assert(std::is_integral<T>::value,
+                "Type can only be uint64_t, uint32_t, uint16_t and uint8_t");
+  std::bitset<sizeof(T) * 8> bits(value);
+  return bits.to_string();
 }
 
-template <typename T>
-std::uint64_t StringToUint(const std::string& s)
-{
-    static_assert(std::is_integral<T>::value, "Type can only be uint64_t, uint32_t, uint16_t and uint8_t");
-    T value = 0;
-    T x = 0;
-    std::for_each(s.begin(),s.end(),[&x](const char &c) {
-	    x = (x<<1)+(c-'0');
-	    });
-    std::memcpy(&value,&x,sizeof(T));
-    return value;
+template <typename T> std::uint64_t StringToUint(const std::string &s) {
+  static_assert(std::is_integral<T>::value,
+                "Type can only be uint64_t, uint32_t, uint16_t and uint8_t");
+  T value = 0;
+  T x = 0;
+  std::for_each(s.begin(), s.end(),
+                [&x](const char &c) { x = (x << 1) + (c - '0'); });
+  std::memcpy(&value, &x, sizeof(T));
+  return value;
 }
 
 } // namespace ga

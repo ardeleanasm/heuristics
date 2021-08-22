@@ -4,9 +4,10 @@ namespace ga {
 template <typename T, std::size_t geneLength> class Chromosome {
   static_assert(std::is_floating_point<T>::value,
                 "Fitness value type can only be float or double");
-  static_assert(geneLength>0, "Gene size cannot be negative or zero");
+  static_assert(geneLength > 0, "Gene size cannot be negative or zero");
+
 public:
-  Chromosome() {sGenes="";}
+  Chromosome() { sGenes = ""; }
   Chromosome(const std::string &genes);
   Chromosome(const Chromosome<T, geneLength> &chromosome);
 
@@ -16,8 +17,8 @@ public:
   Chromosome &operator=(Chromosome<T, geneLength> &&) = delete;
 
   void SetGenes(const std::string &gene) {
-      assert(gene.length()==geneLength);
-      sGenes = gene;
+    assert(gene.length() == geneLength);
+    sGenes = gene;
   }
 
   [[nodiscard]] std::string GetGenes() const { return sGenes; }
@@ -54,12 +55,4 @@ template <typename T, std::size_t geneLength>
 void Chromosome<T, geneLength>::SetFitnessValue(const T value) {
   gFitnessValue = value;
 }
-/*
-template <typename T, std::size_t geneLength>
-void Chromosome<T,geneLength>::Initialize() {
-    ga::Randomize<geneLength> rndGenerator;
-    std::uint8_t rndGene = rndGenerator.generate();
-    sGenes = ga::UintToString<std::uint8_t>(rndGene);
-}
-*/
 } // namespace ga
