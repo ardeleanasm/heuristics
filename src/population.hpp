@@ -9,17 +9,18 @@ class Population {
 public:
   Population();
   Population(const Population<T, populationSize, geneLength> &population);
-  Population(Population<T, populationSize, geneLength> &&) = delete;
-  Population &
-  operator=(const Population<T, populationSize, geneLength> &population);
-  Population &operator=(Population<T, populationSize, geneLength> &&) = delete;
+  Population(Population<T, populationSize, geneLength> &&population);
+  Population &operator=(const Population<T, populationSize, geneLength> &population);
+  Population &operator=(Population<T, populationSize, geneLength> &&population);
   void RegisterChromosomeGenerator(
       std::function<void(Chromosome<T, geneLength> &)> f);
   void
   RegisterFitnessFunction(std::function<void(Chromosome<T, geneLength> &)> f);
   void GeneratePopulation();
   void EvaluatePopulation();
-
+  [[nodiscard]] std::array<Chromosome<T,geneLength>,populationSize> GetPopulation() const {
+      return aChromosomePopulation;
+  }
 private:
   std::array<Chromosome<T, geneLength>, populationSize> aChromosomePopulation;
   std::function<void(Chromosome<T, geneLength> &)> fChromosomeGenerator;
@@ -36,6 +37,15 @@ Population<T, populationSize, geneLength>::Population(
     const Population<T, populationSize, geneLength> &population) {
   aChromosomePopulation = population.aChromosomePopulation;
   fChromosomeGenerator = population.fChromosomeGenerator;
+  fFitnessFunction = population.fFitnessFunction;
+}
+
+template <typename T, std::size_t populationSize, std::size_t geneLength>
+Population<T, populationSize, geneLength>::Population(
+    Population<T, populationSize, geneLength> &&population) {
+  aChromosomePopulation = population.aChromosomePopulation;
+  fChromosomeGenerator = population.fChromosomeGenerator;
+  fFitnessFunction = population.fFitnessFunction;
 }
 
 template <typename T, std::size_t populationSize, std::size_t geneLength>
@@ -44,6 +54,18 @@ Population<T, populationSize, geneLength>::operator=(
     const Population<T, populationSize, geneLength> &population) {
   aChromosomePopulation = population.aChromosomePopulation;
   fChromosomeGenerator = population.fChromosomeGenerator;
+  fFitnessFunction = population.fFitnessFunction;
+  return *this;
+}
+
+template <typename T, std::size_t populationSize, std::size_t geneLength>
+Population<T, populationSize, geneLength> &
+Population<T, populationSize, geneLength>::operator=(
+    Population<T, populationSize, geneLength> &&population) {
+  aChromosomePopulation = population.aChromosomePopulation;
+  fChromosomeGenerator = population.fChromosomeGenerator;
+  fFitnessFunction = population.fFitnessFunction;
+  return *this;
 }
 
 template <typename T, std::size_t populationSize, std::size_t geneLength>
@@ -68,4 +90,7 @@ void Population<T, populationSize, geneLength>::EvaluatePopulation() {
   std::for_each(aChromosomePopulation.begin(), aChromosomePopulation.end(),
                 fFitnessFunction);
 }
+
+
 } // namespace ga
+

@@ -11,10 +11,10 @@ public:
   Chromosome(const std::string &genes);
   Chromosome(const Chromosome<T, geneLength> &chromosome);
 
-  Chromosome(Chromosome<T, geneLength> &&) = delete;
+  Chromosome(Chromosome<T, geneLength> &&);
   Chromosome &operator=(const Chromosome<T, geneLength> &chromosome);
 
-  Chromosome &operator=(Chromosome<T, geneLength> &&) = delete;
+  Chromosome &operator=(Chromosome<T, geneLength> &&);
 
   void SetGenes(const std::string &gene) {
     assert(gene.length() == geneLength);
@@ -45,12 +45,23 @@ Chromosome<T, geneLength>::Chromosome(
 }
 
 template <typename T, std::size_t geneLength>
+Chromosome<T, geneLength>::Chromosome(
+    Chromosome<T, geneLength> &&chromosome) {
+  sGenes = std::move(chromosome.sGenes);
+}
+template <typename T, std::size_t geneLength>
 Chromosome<T, geneLength> &Chromosome<T, geneLength>::operator=(
     const Chromosome<T, geneLength> &chromosome) {
   sGenes = chromosome.sGenes;
   return *this;
 }
 
+template <typename T, std::size_t geneLength>
+Chromosome<T, geneLength> &Chromosome<T, geneLength>::operator=(
+    Chromosome<T, geneLength> &&chromosome) {
+  sGenes = std::move(chromosome.sGenes);
+  return *this;
+}
 template <typename T, std::size_t geneLength>
 void Chromosome<T, geneLength>::SetFitnessValue(const T value) {
   gFitnessValue = value;

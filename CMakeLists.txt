@@ -28,21 +28,21 @@ if(ENABLE_PCH)
   target_precompile_headers(
     project_options
     INTERFACE
-    <complex>
     <memory>
     <vector>
     <exception>
-    <cassert>
-    <array>
-    <string>
     <tuple>
     <cstddef>
     #used
     <random>
+    <cassert>
+    <string>
+    <array>
     <source_location>
     <bitset>
     <cstdint>
     <functional>
+    <sstream>
     )
 endif()
 

@@ -5,10 +5,9 @@ namespace ga {
         class Chromosome;
 
     template<typename T, std::size_t populationSize,std::size_t geneLength> 
-
 	class Population;
 
-    template<typename T>
+    template<typename T,std::size_t populationSize,std::size_t geneLength>
 	class GeneticAlgorithm;
 
     template<unsigned int N> class Randomize;
