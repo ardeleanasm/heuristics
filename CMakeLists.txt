@@ -42,7 +42,7 @@ if(ENABLE_PCH)
     <bitset>
     <cstdint>
     <functional>
-    <sstream>
+    <algorithm>
     )
 endif()
 

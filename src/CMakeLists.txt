@@ -9,6 +9,7 @@ set(inc
     geneticalgorithm.hpp
     population.hpp
     utilities.hpp
+    selection.hpp
     )
 add_executable(intro ${src} ${inc})
 target_link_libraries(

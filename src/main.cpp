@@ -30,7 +30,7 @@ int main(int argc,char **argv)
     p1.RegisterChromosomeGenerator(std::bind(&chromosomeGenerator,std::placeholders::_1));
     p1.GeneratePopulation();
 */
-    ga::GeneticAlgorithm<double,10,8>galgo(chromosomeGenerator,fitnessFunction);
+    ga::GeneticAlgorithm<double,10,8,100>galgo(chromosomeGenerator,fitnessFunction);
     galgo.Initialize();
     galgo.Run();
     return 0;
