@@ -3,7 +3,15 @@
 
 #include "heuristics.hpp"
 
-void chromosomeGenerator(ga::Chromosome<double,8> &chromosome)
+
+static constexpr ga::Config conf={
+	.geneLength = 8,
+	.populationSize = 10,
+	.numberOfGenerations = 100,
+	.tournamentLength = 4
+    };
+
+void chromosomeGenerator(ga::Chromosome<double,conf> &chromosome)
 {
     ga::Randomize<8> rndGenerator;
     std::uint8_t rndGene = rndGenerator.generate();
@@ -11,7 +19,7 @@ void chromosomeGenerator(ga::Chromosome<double,8> &chromosome)
     spdlog::info("Gene generated!");
 }
 
-void fitnessFunction(ga::Chromosome<double,8> &chromosome)
+void fitnessFunction(ga::Chromosome<double,conf> &chromosome)
 {
     
     spdlog::info("Gene:{0}",chromosome.GetGenes());
@@ -19,7 +27,8 @@ void fitnessFunction(ga::Chromosome<double,8> &chromosome)
 
 int main(int argc,char **argv)
 {
-/*
+
+    /*
     ga::Chromosome<double,8> c1;
     c1.Initialize();    
     spdlog::info(c1.GetGenes());
@@ -30,7 +39,7 @@ int main(int argc,char **argv)
     p1.RegisterChromosomeGenerator(std::bind(&chromosomeGenerator,std::placeholders::_1));
     p1.GeneratePopulation();
 */
-    ga::GeneticAlgorithm<double,10,8,100>galgo(chromosomeGenerator,fitnessFunction);
+    ga::GeneticAlgorithm<double,conf>galgo(chromosomeGenerator,fitnessFunction);
     galgo.Initialize();
     galgo.Run();
     return 0;

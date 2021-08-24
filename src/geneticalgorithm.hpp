@@ -2,13 +2,13 @@
 
 namespace ga
 {
-    template <typename T,std::size_t populationSize, std::size_t geneLength,std::size_t numberOfGenerations>
+    template <typename T, Config conf>
     class GeneticAlgorithm
     {
 	public:
 	    GeneticAlgorithm(
-		    std::function<void(Chromosome<T,geneLength> &)> chromosomeGenerator,
-		    std::function<void(Chromosome<T,geneLength> &)> fitnessFunction
+		    std::function<void(Chromosome<T,conf> &)> chromosomeGenerator,
+		    std::function<void(Chromosome<T,conf> &)> fitnessFunction
 		    );
 	    void Initialize();
 	    void Run();
@@ -17,17 +17,17 @@ namespace ga
 	    void Mutate();
 	    void Evolve();
 	    void SelectIndividual();
-	    Population<T,populationSize,geneLength> gPopulation;
-	    std::function<void(Chromosome<T,geneLength> &)> fChromosomeGenerator;
-	    std::function<void(Chromosome<T,geneLength> &)> fFitnessFunction;
-	    static constexpr std::size_t nNumberOfGenerations = numberOfGenerations;
+	    Population<T,conf> gPopulation;
+	    std::function<void(Chromosome<T,conf> &)> fChromosomeGenerator;
+	    std::function<void(Chromosome<T,conf> &)> fFitnessFunction;
+	    static constexpr std::size_t nNumberOfGenerations = conf.numberOfGenerations;
     };
 
 
-template <typename T, std::size_t populationSize,std::size_t geneLength,std::size_t numberOfGenerations>
-GeneticAlgorithm<T,populationSize,geneLength,numberOfGenerations>::GeneticAlgorithm(
-	std::function<void(Chromosome<T,geneLength> &)> chromosomeGenerator,
-	std::function<void(Chromosome<T,geneLength> &)> fitnessFunction
+template <typename T, Config conf>
+GeneticAlgorithm<T,conf>::GeneticAlgorithm(
+	std::function<void(Chromosome<T,conf> &)> chromosomeGenerator,
+	std::function<void(Chromosome<T,conf> &)> fitnessFunction
 	)
 {
     fChromosomeGenerator = chromosomeGenerator;
@@ -35,10 +35,10 @@ GeneticAlgorithm<T,populationSize,geneLength,numberOfGenerations>::GeneticAlgori
 }
 
 
-template <typename T, std::size_t populationSize, std::size_t geneLength,std::size_t numberOfGenerations>
-void GeneticAlgorithm<T,populationSize,geneLength,numberOfGenerations>::Initialize()
+template <typename T, Config conf>
+void GeneticAlgorithm<T,conf>::Initialize()
 {
-    gPopulation=Population<T,populationSize,geneLength>();
+    gPopulation=Population<T,conf>();
     gPopulation.RegisterChromosomeGenerator(fChromosomeGenerator);
     gPopulation.RegisterFitnessFunction(fFitnessFunction);
     gPopulation.GeneratePopulation();
@@ -46,8 +46,8 @@ void GeneticAlgorithm<T,populationSize,geneLength,numberOfGenerations>::Initiali
 }
 
 
-template <typename T, std::size_t populationSize, std::size_t geneLength,std::size_t numberOfGenerations>
-void GeneticAlgorithm<T,populationSize,geneLength,numberOfGenerations>::Run()
+template <typename T, Config conf>
+void GeneticAlgorithm<T,conf>::Run()
 {
     std::size_t generationNumber = 0;
     auto bestIndividual = gPopulation.GetBestChromosome();
@@ -60,10 +60,10 @@ void GeneticAlgorithm<T,populationSize,geneLength,numberOfGenerations>::Run()
 }
 
 
-template <typename T, std::size_t populationSize, std::size_t geneLength,std::size_t numberOfGenerations>
-void GeneticAlgorithm<T, populationSize, geneLength, numberOfGenerations>::Evolve()
+template <typename T, Config conf>
+void GeneticAlgorithm<T, conf>::Evolve()
 {
-    Population<T,populationSize,geneLength>newPopulation;
+    Population<T,conf>newPopulation;
     for (auto &item: gPopulation.GetPopulation())  {
 	/* TODO: Implement iterator for population in order to avoid iterating on the
 	 * contained structure.
@@ -74,26 +74,26 @@ void GeneticAlgorithm<T, populationSize, geneLength, numberOfGenerations>::Evolv
 }
 
 
-template <typename T, std::size_t populationSize, std::size_t geneLength,std::size_t numberOfGenerations>
-void GeneticAlgorithm<T, populationSize, geneLength, numberOfGenerations>::Crossover()
+template <typename T, Config conf>
+void GeneticAlgorithm<T, conf>::Crossover()
 {
 }
 
 
-template <typename T, std::size_t populationSize, std::size_t geneLength,std::size_t numberOfGenerations>
-void GeneticAlgorithm<T, populationSize, geneLength, numberOfGenerations>::Mutate()
+template <typename T, Config conf>
+void GeneticAlgorithm<T, conf>::Mutate()
 {
 }
 
-template <typename T, std::size_t populationSize, std::size_t geneLength,std::size_t numberOfGenerations>
-void GeneticAlgorithm<T, populationSize, geneLength, numberOfGenerations>::SelectIndividual()
+template <typename T, Config conf>
+void GeneticAlgorithm<T, conf>::SelectIndividual()
 { /* TODO: Selection is currently hardcoded to tournament. Allow user to choose from
      a list of available selections. (Decorator Pattern for a class Selection.
 */
     std::size_t tournamentSize = 2;
-    Population<T,populationSize,geneLength> newPopulation;
+    Population<T,conf> newPopulation;
     for(std::size_t i; i<tournamentSize;i++) {
-	auto randomIndividualIndex= uniform<std::size_t>(0,populationSize); 
+	auto randomIndividualIndex= uniform<std::size_t>(0,conf.populationSize); 
     }
 }
 

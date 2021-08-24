@@ -2,7 +2,7 @@
 
 namespace ga
 {
-    template<typename T, std::size_t populationSize, std::size_t geneLength>
+    template<typename T, Config conf>
     class Selection 
     {
 	public:
@@ -10,8 +10,8 @@ namespace ga
 	    virtual void Select()=0;
     };
 
-    template<typename T, std::size_t populationSize, std::size_t geneLength>
-    class TournamentSelection: public Selection<T,populationSize,geneLength>
+    template<typename T, Config conf>
+    class TournamentSelection: public Selection<T,conf>
     {
 	public:
 	    void Select() override
@@ -21,17 +21,17 @@ namespace ga
 	private:
     };
 
-    template<typename T, std::size_t populationSize, std::size_t geneLength>
+    template<typename T, Config conf>
     class SelectionObjectAbstractFactory {
 
 	public:
-	    virtual std::shared_ptr<Selection<T,populationSize,geneLength>> CreateSelectionObject() const = 0;	    
+	    virtual std::shared_ptr<Selection<T,conf>> CreateSelectionObject() const = 0;	    
     };
 
-    template<typename T, std::size_t populationSize, std::size_t geneLength>
-    class SelectionObjectFactory: public SelectionObjectAbstractFactory<T,populationSize,geneLength> {
-	std::shared_ptr<Selection<T, populationSize,geneLength>> CreateSelectionObject() const override {
-	    return std::shared_ptr<Selection<T,populationSize,geneLength>>(new TournamentSelection<T,populationSize,geneLength>());
+    template<typename T, Config conf>
+    class SelectionObjectFactory: public SelectionObjectAbstractFactory<T,conf> {
+	std::shared_ptr<Selection<T,conf>> CreateSelectionObject() const override {
+	    return std::shared_ptr<Selection<T,conf>>(new TournamentSelection<T,conf>());
 	}
     };
 }

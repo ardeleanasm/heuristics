@@ -1,16 +1,24 @@
 #pragma once
 
 namespace ga {
-    template<typename T, std::size_t geneLength> 
+    struct Config
+    {
+	std::size_t geneLength;
+	std::size_t populationSize;
+	std::size_t numberOfGenerations;
+	std::size_t tournamentLength;
+
+    };
+    template<typename T, Config conf> 
         class Chromosome;
 
-    template<typename T, std::size_t populationSize,std::size_t geneLength> 
+    template<typename T, Config conf> 
 	class Population;
 
-    template<typename T,std::size_t populationSize,std::size_t geneLength,std::size_t numberOfGenerations>
+    template<typename T,Config conf>
 	class GeneticAlgorithm;
 
-    template<typename T, std::size_t populationSize, std::size_t geneLength>
+    template<typename T, Config conf>
 	class SelectionMechanism;
 
     template<unsigned int N> class Randomize;
