@@ -8,7 +8,7 @@ static constexpr ga::Config conf={
 	.geneLength = 8,
 	.populationSize = 10,
 	.numberOfGenerations = 100,
-	.tournamentLength = 4
+	.tournamentSize = 4
     };
 
 void chromosomeGenerator(ga::Chromosome<double,conf> &chromosome)
@@ -16,29 +16,22 @@ void chromosomeGenerator(ga::Chromosome<double,conf> &chromosome)
     ga::Randomize<8> rndGenerator;
     std::uint8_t rndGene = rndGenerator.generate();
     chromosome.SetGenes(ga::UintToString<std::uint8_t>(rndGene));
-    spdlog::info("Gene generated!");
 }
 
 void fitnessFunction(ga::Chromosome<double,conf> &chromosome)
 {
-    
-    spdlog::info("Gene:{0}",chromosome.GetGenes());
+    std::string genes = chromosome.GetGenes();
+    double fitValue = 0.0;
+    std::for_each(genes.begin(),genes.end(),[&fitValue](char const &c){
+	if (c =='1') fitValue++;
+    });
+    chromosome.SetFitnessValue(fitValue);
+    spdlog::info("Gene:{0} Fitness: {1}",chromosome.GetGenes(),chromosome.GetFitnessValue());
 }
 
 int main(int argc,char **argv)
 {
-
-    /*
-    ga::Chromosome<double,8> c1;
-    c1.Initialize();    
-    spdlog::info(c1.GetGenes());
-*/
-/*
-    ga::Population<double, 10,8> p1;
-    p1.RegisterChromosomeGenerator(chromosomeGenerator);
-    p1.RegisterChromosomeGenerator(std::bind(&chromosomeGenerator,std::placeholders::_1));
-    p1.GeneratePopulation();
-*/
+ spdlog::set_level(spdlog::level::debug); // Set global log level to debug
     ga::GeneticAlgorithm<double,conf>galgo(chromosomeGenerator,fitnessFunction);
     galgo.Initialize();
     galgo.Run();

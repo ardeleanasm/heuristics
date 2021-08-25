@@ -21,9 +21,31 @@ public:
   [[nodiscard]] std::array<Chromosome<T,conf>,conf.populationSize> GetPopulation() const {
       return aChromosomePopulation;
   }
+
+  [[nodiscard]] Chromosome<T,conf> GetChromosome(const std::size_t position) const
+  {
+      assert(position>=0 && position<conf.populationSize);
+      return aChromosomePopulation[position];
+  }
+
+  void SelectChromosome(const std::size_t position) {
+      assert(position>=0 && position<conf.populationSize);
+      aChromosomePopulation[position].Select();
+  }
+  void UnselectChromosome(const std::size_t position) {
+      assert(position>=0 && position<conf.populationSize);
+      aChromosomePopulation[position].Unselect();
+  }
+
+  void UnselectAll() {
+    for(std::size_t i=0;i<conf.populationSize;i++) {
+	UnselectChromosome(i);
+    }
+  }
+
   void SetChromosome(const Chromosome<T,conf> &c, const std::size_t position);
   Chromosome<T,conf> GetBestChromosome() const;
-
+  Chromosome<T,conf> GetBestSelectedChromosome() const;
 private:
   std::array<Chromosome<T, conf>, conf.populationSize> aChromosomePopulation;
   std::function<void(Chromosome<T, conf> &)> fChromosomeGenerator;
@@ -110,7 +132,17 @@ Chromosome<T,conf> Population<T,conf>::GetBestChromosome() const
 
     return static_cast<Chromosome<T,conf>>(*chromosome);
 }
+template <typename T, Config conf>
+Chromosome<T,conf> Population<T,conf>::GetBestSelectedChromosome() const
+{
 
+    auto chromosome = std::max_element(aChromosomePopulation.begin(),aChromosomePopulation.end(),[](const auto &lhs, const auto &rhs){
+	    return (lhs.GetFitnessValue() < rhs.GetFitnessValue() &&
+		   lhs.IsSelected() && rhs.IsSelected()); 
+	    });
+
+    return static_cast<Chromosome<T,conf>>(*chromosome);
+}
 
 } // namespace ga
 

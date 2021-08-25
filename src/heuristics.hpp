@@ -6,7 +6,7 @@ namespace ga {
 	std::size_t geneLength;
 	std::size_t populationSize;
 	std::size_t numberOfGenerations;
-	std::size_t tournamentLength;
+	std::size_t tournamentSize;
 
     };
     template<typename T, Config conf> 
@@ -19,8 +19,16 @@ namespace ga {
 	class GeneticAlgorithm;
 
     template<typename T, Config conf>
-	class SelectionMechanism;
+	class Selection;
 
+    template<typename T, Config conf>
+	class TournamentSelection;
+
+    template<typename T, Config conf>
+	class SelectionObjectAbstractFactory;
+
+    template<typename T, Config conf>
+	class SelectionObjectFactory;
     template<unsigned int N> class Randomize;
 
 }

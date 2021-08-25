@@ -7,16 +7,24 @@ namespace ga
     {
 	public:
 	    virtual ~Selection() {}
-	    virtual void Select()=0;
+	    virtual Chromosome<T,conf> Select(Population<T,conf> &population)=0;
+
     };
 
     template<typename T, Config conf>
     class TournamentSelection: public Selection<T,conf>
     {
 	public:
-	    void Select() override
+	    Chromosome<T,conf> Select(Population<T,conf> &population) override
 	    {
-		//TODO:Some implementation
+		for(std::size_t i=0;i<conf.tournamentSize; i++) {
+		    auto randomChromosomeIndex = uniform<std::size_t>(0,conf.populationSize);
+		    population.SelectChromosome(randomChromosomeIndex);
+
+		}
+		auto bestChromosome = population.GetBestSelectedChromosome();
+		population.UnselectAll();	
+		return bestChromosome;
 	    }
 	private:
     };

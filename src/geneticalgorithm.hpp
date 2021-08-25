@@ -16,11 +16,12 @@ namespace ga
 	    void Crossover();
 	    void Mutate();
 	    void Evolve();
-	    void SelectIndividual();
 	    Population<T,conf> gPopulation;
 	    std::function<void(Chromosome<T,conf> &)> fChromosomeGenerator;
 	    std::function<void(Chromosome<T,conf> &)> fFitnessFunction;
 	    static constexpr std::size_t nNumberOfGenerations = conf.numberOfGenerations;
+	    std::shared_ptr<SelectionObjectAbstractFactory<T,conf>> pSelectionObjectFactory;
+	    std::shared_ptr<Selection<T,conf>> pSelectionObject;
     };
 
 
@@ -43,6 +44,11 @@ void GeneticAlgorithm<T,conf>::Initialize()
     gPopulation.RegisterFitnessFunction(fFitnessFunction);
     gPopulation.GeneratePopulation();
     gPopulation.EvaluatePopulation();
+
+    pSelectionObjectFactory = std::make_shared<SelectionObjectFactory<T,conf>>();
+    pSelectionObject = pSelectionObjectFactory->CreateSelectionObject();
+
+
 }
 
 
@@ -51,12 +57,21 @@ void GeneticAlgorithm<T,conf>::Run()
 {
     std::size_t generationNumber = 0;
     auto bestIndividual = gPopulation.GetBestChromosome();
-    spdlog::info("Best individual:{0}",bestIndividual.GetGenes());
     
-    for(;generationNumber<nNumberOfGenerations;generationNumber++) {
+
+
+    spdlog::info("Best individual:{0} Fitness: {1}",bestIndividual.GetGenes(),bestIndividual.GetFitnessValue());
+    
+//    for(;generationNumber<nNumberOfGenerations;generationNumber++) {
+
 	Evolve();
+	for(auto chromosome:gPopulation.GetPopulation())
+	{
+	    spdlog::debug("Gene:{0} Fitness: {1} Selected:{2}",chromosome.GetGenes(),chromosome.GetFitnessValue(),chromosome.IsSelected());
+	}
 	bestIndividual = gPopulation.GetBestChromosome();
-    }
+  //  }
+
 }
 
 
@@ -65,11 +80,8 @@ void GeneticAlgorithm<T, conf>::Evolve()
 {
     Population<T,conf>newPopulation;
     for (auto &item: gPopulation.GetPopulation())  {
-	/* TODO: Implement iterator for population in order to avoid iterating on the
-	 * contained structure.
-	 * */
-//	auto firstIndividual = SelectIndividual();
-	SelectIndividual();
+	auto bestFirstIndividual = pSelectionObject->Select(gPopulation);
+	auto bestSecondIndividual = pSelectionObject->Select(gPopulation);
     }
 }
 
@@ -85,17 +97,6 @@ void GeneticAlgorithm<T, conf>::Mutate()
 {
 }
 
-template <typename T, Config conf>
-void GeneticAlgorithm<T, conf>::SelectIndividual()
-{ /* TODO: Selection is currently hardcoded to tournament. Allow user to choose from
-     a list of available selections. (Decorator Pattern for a class Selection.
-*/
-    std::size_t tournamentSize = 2;
-    Population<T,conf> newPopulation;
-    for(std::size_t i; i<tournamentSize;i++) {
-	auto randomIndividualIndex= uniform<std::size_t>(0,conf.populationSize); 
-    }
-}
 
 
 }
