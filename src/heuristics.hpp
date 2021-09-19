@@ -34,6 +34,10 @@ namespace ga {
 	class SelectionObjectFactory;
     template<unsigned int N> class Randomize;
 
+    enum class SelectionMechanism:std::uint8_t {
+	TOURNAMENT_SELECTION = 0,
+	ROULETTE_SELECTION
+    };
 }
 
 #include "utilities.hpp"

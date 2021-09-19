@@ -46,7 +46,8 @@ void GeneticAlgorithm<T,conf>::Initialize()
     gPopulation.EvaluatePopulation();
 
     pSelectionObjectFactory = std::make_shared<SelectionObjectFactory<T,conf>>();
-    pSelectionObject = pSelectionObjectFactory->CreateSelectionObject();
+    pSelectionObject = pSelectionObjectFactory->CreateSelectionObject(
+	    SelectionMechanism::ROULETTE_SELECTION);
 
 
 }

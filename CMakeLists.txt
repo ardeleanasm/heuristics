@@ -44,6 +44,7 @@ if(ENABLE_PCH)
     <functional>
     <algorithm>
     <cmath>
+    <numeric>
     )
 endif()
 

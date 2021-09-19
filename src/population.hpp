@@ -18,6 +18,7 @@ public:
   RegisterFitnessFunction(std::function<void(Chromosome<T, conf> &)> f);
   void GeneratePopulation();
   void EvaluatePopulation();
+  T GetTotalFitnessValue() const;
   [[nodiscard]] std::array<Chromosome<T,conf>,conf.populationSize> GetPopulation() const {
       return aChromosomePopulation;
   }
@@ -142,6 +143,13 @@ Chromosome<T,conf> Population<T,conf>::GetBestSelectedChromosome() const
 	    });
 
     return static_cast<Chromosome<T,conf>>(*chromosome);
+}
+
+template <typename T, Config conf>
+T Population<T,conf>::GetTotalFitnessValue() const {
+    return std::accumulate(aChromosomePopulation.begin(),aChromosomePopulation.end(),0,[](T i, const Chromosome<T,conf> &chr) {
+	    return i+chr.GetFitnessValue();
+	    });
 }
 
 } // namespace ga
