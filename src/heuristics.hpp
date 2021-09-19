@@ -8,6 +8,7 @@ namespace ga {
 	std::size_t numberOfGenerations;
 	std::size_t tournamentSize;
 	double crossoverRate;
+	double mutationProbability;
 
     };
     template<typename T, Config conf> 

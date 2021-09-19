@@ -9,7 +9,8 @@ static constexpr ga::Config conf={
 	.populationSize = 10,
 	.numberOfGenerations = 5,
 	.tournamentSize = 3,
-	.crossoverRate = 0.5
+	.crossoverRate = 0.5,
+	.mutationProbability = 0.2,
     };
 
 void chromosomeGenerator(ga::Chromosome<double,conf> &chromosome)
@@ -32,9 +33,11 @@ void fitnessFunction(ga::Chromosome<double,conf> &chromosome)
 
 int main(int argc,char **argv)
 {
- spdlog::set_level(spdlog::level::debug); // Set global log level to debug
+    spdlog::set_level(spdlog::level::debug); // Set global log level to debug
     ga::GeneticAlgorithm<double,conf>galgo(chromosomeGenerator,fitnessFunction);
     galgo.Initialize();
     galgo.Run();
+    /*std::size_t position = ga::uniform<std::size_t>(0,conf.geneLength);
+    spdlog::warn("Position:{0}",position);*/
     return 0;
 }

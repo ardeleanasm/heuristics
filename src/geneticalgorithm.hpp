@@ -60,9 +60,9 @@ void GeneticAlgorithm<T,conf>::Run()
     
 
 
-    spdlog::info("Best individual:{0} Fitness: {1}",bestIndividual.GetGenes(),bestIndividual.GetFitnessValue());
     
     for(;generationNumber<nNumberOfGenerations;generationNumber++) {
+	spdlog::info("Best individual:{0} Fitness: {1}",bestIndividual.GetGenes(),bestIndividual.GetFitnessValue());
 	spdlog::debug("Generation:{0}",generationNumber);
 	Evolve();
 	for(auto chromosome:gPopulation.GetPopulation())
@@ -89,6 +89,8 @@ void GeneticAlgorithm<T, conf>::Evolve()
     }
     gPopulation = newPopulation;
     gPopulation.EvaluatePopulation();
+    Mutate();
+    gPopulation.EvaluatePopulation();
 }
 
 
@@ -99,8 +101,8 @@ Chromosome<T,conf> GeneticAlgorithm<T, conf>::Crossover(const Chromosome<T,conf>
     std::string genesY = y.GetGenes();
 
     for (std::size_t i=0;i<conf.geneLength;i++) {
-	double probability = uniform<double>(0,1);
-	if (probability < conf.crossoverRate) {
+	double crossoverProbability = uniform<double>(0,1);
+	if (crossoverProbability < conf.crossoverRate) {
 	    genesY[i] = genesX[i];    
 	}
     }
@@ -112,7 +114,22 @@ Chromosome<T,conf> GeneticAlgorithm<T, conf>::Crossover(const Chromosome<T,conf>
 template <typename T, Config conf>
 void GeneticAlgorithm<T, conf>::Mutate()
 {
-    
+
+    for (std::size_t i = 0; i<conf.populationSize; i++) {
+	double mutationProbability = uniform<double>(0,1);
+	if (mutationProbability < conf.mutationProbability) {
+	    std::string genes = gPopulation.GetChromosome(i).GetGenes();
+	    std::size_t position = uniform<std::size_t>(0,conf.geneLength);
+	    if (genes[position] == '0') {
+		genes[position] == '1';
+	    }
+	    else {
+		genes[position] == '0';
+	    }
+	    Chromosome<T,conf>newChromosome(genes);
+	    gPopulation.SetChromosome(newChromosome,i);
+	}
+    }
 }
 
 
