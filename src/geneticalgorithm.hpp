@@ -13,7 +13,7 @@ namespace ga
 	    void Initialize();
 	    void Run();
 	private:
-	    void Crossover();
+	    Chromosome<T,conf> Crossover(const Chromosome<T,conf>& x,const Chromosome<T,conf>& y) const;
 	    void Mutate();
 	    void Evolve();
 	    Population<T,conf> gPopulation;
@@ -62,15 +62,15 @@ void GeneticAlgorithm<T,conf>::Run()
 
     spdlog::info("Best individual:{0} Fitness: {1}",bestIndividual.GetGenes(),bestIndividual.GetFitnessValue());
     
-//    for(;generationNumber<nNumberOfGenerations;generationNumber++) {
-
+    for(;generationNumber<nNumberOfGenerations;generationNumber++) {
+	spdlog::debug("Generation:{0}",generationNumber);
 	Evolve();
 	for(auto chromosome:gPopulation.GetPopulation())
 	{
-	    spdlog::debug("Gene:{0} Fitness: {1} Selected:{2}",chromosome.GetGenes(),chromosome.GetFitnessValue(),chromosome.IsSelected());
+	    spdlog::debug("\tGene:{0} Fitness: {1} Selected:{2}",chromosome.GetGenes(),chromosome.GetFitnessValue(),chromosome.IsSelected());
 	}
 	bestIndividual = gPopulation.GetBestChromosome();
-  //  }
+    }
 
 }
 
@@ -78,23 +78,41 @@ void GeneticAlgorithm<T,conf>::Run()
 template <typename T, Config conf>
 void GeneticAlgorithm<T, conf>::Evolve()
 {
-    Population<T,conf>newPopulation;
-    for (auto &item: gPopulation.GetPopulation())  {
+    Population<T,conf>newPopulation=gPopulation;
+    
+    for (std::size_t i =0; i<conf.populationSize;i++)  {
 	auto bestFirstIndividual = pSelectionObject->Select(gPopulation);
+
 	auto bestSecondIndividual = pSelectionObject->Select(gPopulation);
+	auto breededIndividual = Crossover(bestFirstIndividual,bestSecondIndividual);
+	newPopulation.SetChromosome(breededIndividual,i);
     }
+    gPopulation = newPopulation;
+    gPopulation.EvaluatePopulation();
 }
 
 
 template <typename T, Config conf>
-void GeneticAlgorithm<T, conf>::Crossover()
+Chromosome<T,conf> GeneticAlgorithm<T, conf>::Crossover(const Chromosome<T,conf>& x,const Chromosome<T,conf>& y) const
 {
+    std::string genesX = x.GetGenes();
+    std::string genesY = y.GetGenes();
+
+    for (std::size_t i=0;i<conf.geneLength;i++) {
+	double probability = uniform<double>(0,1);
+	if (probability < conf.crossoverRate) {
+	    genesY[i] = genesX[i];    
+	}
+    }
+    Chromosome<T,conf> newChromosome(genesY);
+    return newChromosome;
 }
 
 
 template <typename T, Config conf>
 void GeneticAlgorithm<T, conf>::Mutate()
 {
+    
 }
 
 

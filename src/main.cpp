@@ -7,8 +7,9 @@
 static constexpr ga::Config conf={
 	.geneLength = 8,
 	.populationSize = 10,
-	.numberOfGenerations = 100,
-	.tournamentSize = 4
+	.numberOfGenerations = 5,
+	.tournamentSize = 3,
+	.crossoverRate = 0.5
     };
 
 void chromosomeGenerator(ga::Chromosome<double,conf> &chromosome)

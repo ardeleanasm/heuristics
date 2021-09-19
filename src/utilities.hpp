@@ -20,7 +20,7 @@ template <typename T> T uniform(T min, T max) {
         "Error: " + std::string(location.function_name()) + ". min<max.";
     throw std::invalid_argument(errorMessage);
   }
-  return min + probability(rng) * (max - min);
+  return static_cast<T>(min + probability(rng) * (max - min));
 }
 
 template <unsigned int N> class Randomize {
