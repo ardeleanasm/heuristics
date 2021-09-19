@@ -8,7 +8,9 @@ public:
       std::function<void(Chromosome<T, conf> &)> fitnessFunction);
   void Initialize();
   void Run();
-
+  [[nodiscard]] Chromosome<T,conf> GetSolution() const {
+      return gBestSolution;
+  }
 private:
   Chromosome<T, conf> Crossover(const Chromosome<T, conf> &x,
                                 const Chromosome<T, conf> &y) const;
@@ -21,6 +23,7 @@ private:
   std::shared_ptr<SelectionObjectAbstractFactory<T, conf>>
       pSelectionObjectFactory;
   std::shared_ptr<Selection<T, conf>> pSelectionObject;
+  Chromosome<T,conf> gBestSolution;
 };
 
 template <typename T, Config conf>
@@ -62,6 +65,7 @@ template <typename T, Config conf> void GeneticAlgorithm<T, conf>::Run() {
   spdlog::info("Best individual: {0} Fitness: {1} Generation: {2}",
                bestIndividual.GetGenes(), bestIndividual.GetFitnessValue(),
                generationNumber);
+  gBestSolution = bestIndividual;
 }
 
 template <typename T, Config conf> void GeneticAlgorithm<T, conf>::Evolve() {
