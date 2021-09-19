@@ -56,4 +56,28 @@ template <typename T> std::uint64_t StringToUint(const std::string &s) {
   return value;
 }
 
+template <typename T>
+bool approximatelyEqual(T a, T b, T epsilon)
+{
+    return std::fabs(a - b) <= ( (std::fabs(a) < std::fabs(b) ? std::fabs(b) : std::fabs(a)) * epsilon);
+}
+
+template <typename T>
+bool essentiallyEqual(T a, T b, T epsilon)
+{
+    return std::fabs(a - b) <= ( (std::fabs(a) > std::fabs(b) ? std::fabs(b) : std::fabs(a)) * epsilon);
+}
+
+template <typename T>
+bool definitelyGreaterThan(T a, T b, T epsilon)
+{
+    return (a - b) > ( (std::fabs(a) < std::fabs(b) ? std::fabs(b) : std::fabs(a)) * epsilon);
+}
+
+template <typename T>
+bool definitelyLessThan(T a, T b, T epsilon)
+{
+    return (b - a) > ( (std::fabs(a) < std::fabs(b) ? std::fabs(b) : std::fabs(a)) * epsilon);
+}
+
 } // namespace ga

@@ -62,15 +62,18 @@ void GeneticAlgorithm<T,conf>::Run()
 
     
     for(;generationNumber<nNumberOfGenerations;generationNumber++) {
-	spdlog::info("Best individual:{0} Fitness: {1}",bestIndividual.GetGenes(),bestIndividual.GetFitnessValue());
-	spdlog::debug("Generation:{0}",generationNumber);
+	spdlog::info("Generation {0} Best Fitness {1}",generationNumber,bestIndividual.GetFitnessValue());
 	Evolve();
-	for(auto chromosome:gPopulation.GetPopulation())
-	{
-	    spdlog::debug("\tGene:{0} Fitness: {1} Selected:{2}",chromosome.GetGenes(),chromosome.GetFitnessValue(),chromosome.IsSelected());
-	}
 	bestIndividual = gPopulation.GetBestChromosome();
+	
+        if (bestIndividual.GetFitnessValue()==conf.bestFitnessValue) {
+	    generationNumber++;
+	    break;
+	}
+	
     }
+    spdlog::info("Best individual: {0} Fitness: {1} Generation: {2}",bestIndividual.GetGenes(),
+	    bestIndividual.GetFitnessValue(),generationNumber);
 
 }
 
@@ -78,9 +81,14 @@ void GeneticAlgorithm<T,conf>::Run()
 template <typename T, Config conf>
 void GeneticAlgorithm<T, conf>::Evolve()
 {
+    std::size_t elitismOffset = 0;
     Population<T,conf>newPopulation=gPopulation;
-    
-    for (std::size_t i =0; i<conf.populationSize;i++)  {
+    if (conf.useElitism == true) {
+	auto bestIndividual = gPopulation.GetBestChromosome();
+	newPopulation.SetChromosome(bestIndividual, 0);
+	elitismOffset = 1; 
+    }
+    for (std::size_t i = elitismOffset; i<conf.populationSize;i++)  {
 	auto bestFirstIndividual = pSelectionObject->Select(gPopulation);
 
 	auto bestSecondIndividual = pSelectionObject->Select(gPopulation);
@@ -102,7 +110,7 @@ Chromosome<T,conf> GeneticAlgorithm<T, conf>::Crossover(const Chromosome<T,conf>
 
     for (std::size_t i=0;i<conf.geneLength;i++) {
 	double crossoverProbability = uniform<double>(0,1);
-	if (crossoverProbability < conf.crossoverRate) {
+	if (definitelyLessThan<double>(crossoverProbability,conf.crossoverRate,std::numeric_limits<double>::epsilon())) {
 	    genesY[i] = genesX[i];    
 	}
     }
@@ -117,7 +125,7 @@ void GeneticAlgorithm<T, conf>::Mutate()
 
     for (std::size_t i = 0; i<conf.populationSize; i++) {
 	double mutationProbability = uniform<double>(0,1);
-	if (mutationProbability < conf.mutationProbability) {
+	if (definitelyLessThan<double>(mutationProbability,conf.mutationProbability,std::numeric_limits<double>::epsilon())) {
 	    std::string genes = gPopulation.GetChromosome(i).GetGenes();
 	    std::size_t position = uniform<std::size_t>(0,conf.geneLength);
 	    if (genes[position] == '0') {

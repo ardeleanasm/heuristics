@@ -6,11 +6,13 @@
 
 static constexpr ga::Config conf={
 	.geneLength = 8,
-	.populationSize = 10,
-	.numberOfGenerations = 5,
-	.tournamentSize = 3,
-	.crossoverRate = 0.5,
+	.populationSize = 1000,
+	.numberOfGenerations = 10000,
+	.tournamentSize = 100,
+	.crossoverRate = 0.892,
 	.mutationProbability = 0.2,
+	.useElitism = false,
+	.bestFitnessValue = 8
     };
 
 void chromosomeGenerator(ga::Chromosome<double,conf> &chromosome)
@@ -28,7 +30,6 @@ void fitnessFunction(ga::Chromosome<double,conf> &chromosome)
 	if (c =='1') fitValue++;
     });
     chromosome.SetFitnessValue(fitValue);
-    spdlog::info("Gene:{0} Fitness: {1}",chromosome.GetGenes(),chromosome.GetFitnessValue());
 }
 
 int main(int argc,char **argv)

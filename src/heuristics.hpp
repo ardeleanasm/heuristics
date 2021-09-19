@@ -9,7 +9,8 @@ namespace ga {
 	std::size_t tournamentSize;
 	double crossoverRate;
 	double mutationProbability;
-
+	bool useElitism;
+	double bestFitnessValue;
     };
     template<typename T, Config conf> 
         class Chromosome;

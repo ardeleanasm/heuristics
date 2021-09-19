@@ -43,6 +43,7 @@ if(ENABLE_PCH)
     <cstdint>
     <functional>
     <algorithm>
+    <cmath>
     )
 endif()
 
