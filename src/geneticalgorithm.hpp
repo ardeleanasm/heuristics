@@ -47,7 +47,7 @@ void GeneticAlgorithm<T,conf>::Initialize()
 
     pSelectionObjectFactory = std::make_shared<SelectionObjectFactory<T,conf>>();
     pSelectionObject = pSelectionObjectFactory->CreateSelectionObject(
-	    SelectionMechanism::ROULETTE_SELECTION);
+	    SelectionMechanism::TOURNAMENT_SELECTION);
 
 
 }

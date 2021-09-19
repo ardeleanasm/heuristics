@@ -36,8 +36,6 @@ namespace ga
 	public:
 	    Chromosome<T,conf> Select(Population<T,conf> &population) override
 	    {
-		aRelativeProbabilities.fill(0);
-		aProbabilities.fill(0);
 		for(std::size_t i=0;i<conf.populationSize;i++) {
 		    aRelativeProbabilities[i]=population.GetChromosome(i).GetFitnessValue();
 		}
