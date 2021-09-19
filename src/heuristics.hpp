@@ -1,6 +1,10 @@
 #pragma once
 
 namespace ga {
+    enum class SelectionMechanism:std::uint8_t {
+	TOURNAMENT_SELECTION = 0,
+	ROULETTE_SELECTION
+    };
     struct Config
     {
 	std::size_t geneLength;
@@ -11,6 +15,7 @@ namespace ga {
 	double mutationProbability;
 	bool useElitism;
 	double bestFitnessValue;
+	enum SelectionMechanism selectionMechanism;
     };
     template<typename T, Config conf> 
         class Chromosome;
@@ -34,10 +39,6 @@ namespace ga {
 	class SelectionObjectFactory;
     template<unsigned int N> class Randomize;
 
-    enum class SelectionMechanism:std::uint8_t {
-	TOURNAMENT_SELECTION = 0,
-	ROULETTE_SELECTION
-    };
 }
 
 #include "utilities.hpp"

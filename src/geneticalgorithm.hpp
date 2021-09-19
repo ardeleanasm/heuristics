@@ -44,7 +44,7 @@ void GeneticAlgorithm<T, conf>::Initialize() {
 
   pSelectionObjectFactory = std::make_shared<SelectionObjectFactory<T, conf>>();
   pSelectionObject = pSelectionObjectFactory->CreateSelectionObject(
-      SelectionMechanism::TOURNAMENT_SELECTION);
+      conf.selectionMechanism);
 }
 
 template <typename T, Config conf> void GeneticAlgorithm<T, conf>::Run() {

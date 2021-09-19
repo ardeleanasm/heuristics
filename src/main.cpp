@@ -3,14 +3,16 @@
 
 #include "heuristics.hpp"
 
-static constexpr ga::Config conf = {.geneLength = 8,
-                                    .populationSize = 1000,
-                                    .numberOfGenerations = 10000,
-                                    .tournamentSize = 100,
-                                    .crossoverRate = 0.892,
-                                    .mutationProbability = 0.2,
-                                    .useElitism = false,
-                                    .bestFitnessValue = 8};
+static constexpr ga::Config conf = {
+    .geneLength = 8,
+    .populationSize = 1000,
+    .numberOfGenerations = 10000,
+    .tournamentSize = 100,
+    .crossoverRate = 0.892,
+    .mutationProbability = 0.2,
+    .useElitism = false,
+    .bestFitnessValue = 8,
+    .selectionMechanism = ga::SelectionMechanism::TOURNAMENT_SELECTION};
 
 void chromosomeGenerator(ga::Chromosome<double, conf> &chromosome) {
   ga::Randomize<8> rndGenerator;
