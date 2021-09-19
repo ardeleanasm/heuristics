@@ -3,7 +3,13 @@
 set(src 
         main.cpp 
     )
-set(inc 
+set(inc
+    heuristics.hpp
+    chromosome.hpp
+    geneticalgorithm.hpp
+    population.hpp
+    utilities.hpp
+    selection.hpp
     )
 add_executable(intro ${src} ${inc})
 target_link_libraries(
