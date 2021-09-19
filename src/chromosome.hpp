@@ -7,11 +7,7 @@ template <typename T, Config conf> class Chromosome {
   static_assert(conf.geneLength > 0, "Gene size cannot be negative or zero");
 
 public:
-  Chromosome() {
-    sGenes = "";
-    bIsSelected = false;
-    gFitnessValue = 0;
-  }
+  Chromosome() { sGenes = ""; bIsSelected = false; gFitnessValue = 0; }
   Chromosome(const std::string &genes);
   Chromosome(const Chromosome<T, conf> &chromosome);
 
@@ -29,11 +25,11 @@ public:
 
   [[nodiscard]] T GetFitnessValue() const { return gFitnessValue; }
 
-  [[nodiscard]] bool IsSelected() const { return bIsSelected; }
+  [[nodiscard]] bool IsSelected() const {return bIsSelected;}
 
-  void Select() { bIsSelected = true; }
+  void Select() { bIsSelected = true;}
 
-  void Unselect() { bIsSelected = false; }
+  void Unselect() {bIsSelected = false;}
 
   void SetFitnessValue(const T value);
 
@@ -52,21 +48,23 @@ Chromosome<T, conf>::Chromosome(const std::string &genes) {
 }
 
 template <typename T, Config conf>
-Chromosome<T, conf>::Chromosome(const Chromosome<T, conf> &chromosome) {
+Chromosome<T, conf>::Chromosome(
+    const Chromosome<T, conf> &chromosome) {
   sGenes = chromosome.sGenes;
   bIsSelected = chromosome.bIsSelected;
   gFitnessValue = chromosome.gFitnessValue;
 }
 
 template <typename T, Config conf>
-Chromosome<T, conf>::Chromosome(Chromosome<T, conf> &&chromosome) {
+Chromosome<T, conf>::Chromosome(
+    Chromosome<T, conf> &&chromosome) {
   sGenes = std::move(chromosome.sGenes);
   bIsSelected = chromosome.bIsSelected;
   gFitnessValue = chromosome.gFitnessValue;
 }
 template <typename T, Config conf>
-Chromosome<T, conf> &
-Chromosome<T, conf>::operator=(const Chromosome<T, conf> &chromosome) {
+Chromosome<T, conf> &Chromosome<T, conf>::operator=(
+    const Chromosome<T, conf> &chromosome) {
   sGenes = chromosome.sGenes;
   bIsSelected = chromosome.bIsSelected;
   gFitnessValue = chromosome.gFitnessValue;
@@ -74,8 +72,8 @@ Chromosome<T, conf>::operator=(const Chromosome<T, conf> &chromosome) {
 }
 
 template <typename T, Config conf>
-Chromosome<T, conf> &
-Chromosome<T, conf>::operator=(Chromosome<T, conf> &&chromosome) {
+Chromosome<T, conf> &Chromosome<T, conf>::operator=(
+    Chromosome<T, conf> &&chromosome) {
   sGenes = std::move(chromosome.sGenes);
   bIsSelected = chromosome.bIsSelected;
   gFitnessValue = chromosome.gFitnessValue;
