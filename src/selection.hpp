@@ -8,7 +8,7 @@ namespace ga
     {
 	public:
 	    virtual ~Selection() {}
-	    virtual Chromosome<T,conf> Select(Population<T,conf> &population)=0;
+	    virtual Chromosome<T,conf> Select(population_t<conf,conf.populationSize> &population)=0;
 
     };
 
@@ -16,16 +16,21 @@ namespace ga
     class TournamentSelection: public Selection<T,conf>
     {
 	public:
-	    Chromosome<T,conf> Select(Population<T,conf> &population) override
+	    Chromosome<T,conf> Select(population_t<conf,conf.populationSize> &population) override
 	    {
+		population_t<conf,conf.tournamentSize> selectedPopulation;
 		for(std::size_t i=0;i<conf.tournamentSize; i++) {
-		    auto randomChromosomeIndex = uniform<std::size_t>(0,conf.populationSize);
-		    population.SelectChromosome(randomChromosomeIndex);
-
+		    std::size_t randomChromosomeIndex = uniform<std::size_t>(0,conf.populationSize);
+		    selectedPopulation[i] = population[randomChromosomeIndex];
 		}
-		auto bestChromosome = population.GetBestSelectedChromosome();
-		population.UnselectAll();	
-		return bestChromosome;
+		auto bestChromosome = std::max_element(
+			selectedPopulation.begin(),
+			selectedPopulation.end(),
+			[](const auto &lhs, const auto &rhs) {
+			    return lhs.GetFitnessValue() < rhs.GetFitnessValue();
+			}
+			);
+		return static_cast<Chromosome<T,conf>>(*bestChromosome);
 	    }
 	private:
     };
@@ -34,13 +39,16 @@ namespace ga
     class RouletteSelection: public Selection<T,conf>
     {
 	public:
-	    Chromosome<T,conf> Select(Population<T,conf> &population) override
+	    Chromosome<T,conf> Select(population_t<conf,conf.populationSize> &population) override
 	    {
+		Chromosome<T,conf> selectedIndividual;
+		bool isFound = false;
+		double totalFitnessValues = 0.0;
 		for(std::size_t i=0;i<conf.populationSize;i++) {
-		    aRelativeProbabilities[i]=population.GetChromosome(i).GetFitnessValue();
+		    aRelativeProbabilities[i]=population[i].GetFitnessValue();
+		    totalFitnessValues +=aRelativeProbabilities[i];
 		}
 		
-		T totalFitnessValues = population.GetTotalFitnessValue();
 		
 		std::transform(aRelativeProbabilities.begin(),aRelativeProbabilities.end(),
 			aRelativeProbabilities.begin(),[&](T value)-> T{return value/totalFitnessValues;});
@@ -52,18 +60,19 @@ namespace ga
 		    }
 		    aProbabilities[i]=sum;
 		}
-		for (std::size_t i=0;i<conf.tournamentSize;i++) {
-		    double selectionProbability = uniform<double>(0,1);
-		    for (std::size_t j=0;j<conf.populationSize;j++) {
-			if (definitelyLessThan<double>(selectionProbability,aProbabilities[j],std::numeric_limits<double>::epsilon())) {
-			    population.SelectChromosome(j);
-			    break;
-			}
+		double selectionProbability = uniform<double>(0,1);
+		for (std::size_t j=0;j<conf.populationSize;j++) {
+		    if (definitelyLessThan<double>(selectionProbability,aProbabilities[j],std::numeric_limits<double>::epsilon())) {
+		        selectedIndividual = population[j];
+			isFound = true;
+		        break;
 		    }
 		}
-		auto bestChromosome = population.GetBestSelectedChromosome();
-		population.UnselectAll();
-		return bestChromosome;
+		if (isFound) {
+		    return selectedIndividual;
+		}
+
+		return population[0];
 	    }
 	private:
 	    std::array<T, conf.populationSize> aRelativeProbabilities;
@@ -87,3 +96,4 @@ namespace ga
 	}
     };
 }
+

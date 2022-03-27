@@ -7,7 +7,6 @@ set(inc
     heuristics.hpp
     chromosome.hpp
     geneticalgorithm.hpp
-    population.hpp
     utilities.hpp
     selection.hpp
     )

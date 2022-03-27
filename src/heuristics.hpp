@@ -15,9 +15,7 @@ namespace ga {
     template<typename T, Config conf> 
         class Chromosome;
 
-    template<typename T, Config conf> 
-	class Population;
-
+    template<Config conf, std::size_t N> using population_t = std::array<Chromosome<double,conf>,N>;
     template<typename T,Config conf>
 	class GeneticAlgorithm;
 

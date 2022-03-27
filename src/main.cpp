@@ -9,8 +9,8 @@ static constexpr ga::Config conf={
 	.populationSize = 1000,
 	.numberOfGenerations = 10000,
 	.tournamentSize = 100,
-	.crossoverRate = 0.892,
-	.mutationProbability = 0.2,
+	.crossoverRate = 0.752,
+	.mutationProbability = 0.002,
 	.useElitism = false,
 	.bestFitnessValue = 8
     };
